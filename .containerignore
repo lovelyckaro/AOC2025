@@ -1,0 +1,10 @@
+.env
+dist-newstyle
+.github
+.git
+readme.md
+aoc
+.gitignore
+.pre-commit-config.yaml
+descr
+input

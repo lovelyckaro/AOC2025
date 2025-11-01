@@ -1,0 +1,76 @@
+cabal-version: 2.4
+name:          aoc2025
+version:       0.1.0.0
+maintainer:    love.lyckaro@hotmail.se
+author:        Love Lyckaro
+bug-reports:   https://github.com/lovelyckaro/aoc2025/issues
+synopsis:      Loves solutions for advent of code 2025
+
+library
+    exposed-modules:
+        SantaLib
+        SantaLib.Service
+        SantaLib.Parsing
+        Solutions
+
+    hs-source-dirs:     lib
+    other-modules:
+        Solutions.Day01
+        Solutions.Day02
+        Solutions.Day03
+        Solutions.Day04
+        Solutions.Day05
+        Solutions.Day06
+        Solutions.Day07
+        Solutions.Day08
+        Solutions.Day09
+        Solutions.Day10
+        Solutions.Day11
+        Solutions.Day12
+
+    default-language:   GHC2024
+    default-extensions: RecordWildCards, OverloadedStrings
+    ghc-options:        -interactive-print Text.Pretty.Simple.pPrint
+    build-depends:
+        base >=4.20,
+        advent-of-code-api >=0.2.8.0,
+        containers,
+        unordered-containers,
+        text >=2.1.2,
+        tagsoup,
+        vector,
+        megaparsec,
+        replace-megaparsec,
+        pretty-simple,
+        pandoc,
+        servant,
+        aeson,
+        array,
+        mtl,
+        ansi-terminal,
+        sbv,
+        search-algorithms,
+        fgl,
+        heap,
+        log-base
+
+executable aoc
+    main-is:          Main.hs
+    hs-source-dirs:   app
+    default-language: GHC2024
+    default-extensions: OverloadedStrings
+    ghc-options:      -interactive-print Text.Pretty.Simple.pPrint
+    build-depends:
+        base >=4.20,
+        aoc2025,
+        dotenv,
+        optparse-applicative,
+        pretty-simple,
+        text,
+        servant,
+        servant-server,
+        warp,
+        log-base,
+        mtl,
+        bytestring,
+        aeson
