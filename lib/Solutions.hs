@@ -5,7 +5,7 @@ where
 
 import Control.Monad.Error.Class (MonadError)
 import Control.Monad.IO.Class (MonadIO)
-import Data.Maybe (fromJust)
+import Data.Maybe (fromMaybe)
 import Log
 import SantaLib
 import Solutions.Day01 (day01)
@@ -23,6 +23,6 @@ import Solutions.Day12 (day12)
 
 solution :: (MonadLog m, MonadIO m, MonadError String m) => Day -> Solution m
 solution day =
-  fromJust $
+  fromMaybe (Solution Unsolved Unsolved) $
     lookup day $
       zip [mkDay_ 1 .. mkDay_ 12] [day01, day02, day03, day04, day05, day06, day07, day08, day09, day10, day11, day12]

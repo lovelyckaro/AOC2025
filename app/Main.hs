@@ -5,8 +5,9 @@
 module Main where
 
 import Control.Monad (guard, when, (>=>))
-import Control.Monad.Except (ExceptT, runExceptT)
+import Control.Monad.Except (ExceptT, MonadError, runExceptT)
 import Control.Monad.IO.Class
+import Control.Monad.Trans.Class (lift)
 import Data.Aeson (encode)
 import Data.ByteString.Lazy.Char8 (pack)
 import Data.Char (toLower)
@@ -15,7 +16,9 @@ import Data.Text qualified as T
 import Data.Text.IO qualified as TIO
 import Log
 import Log.Backend.StandardOutput
+import Network.Wai
 import Network.Wai.Handler.Warp (runEnv)
+import Network.Wai.Middleware.Cors
 import Options.Applicative
 import SantaLib
 import SantaLib.Service
@@ -139,11 +142,20 @@ runCli runLogger submit inputSource day part = runLogger $ logError $ do
         _ -> liftIO exitFailure
     else liftIO exitSuccess
 
+corsAllowJson :: Middleware
+corsAllowJson = cors (\_ -> Just policy)
+  where
+    policy =
+      simpleCorsResourcePolicy
+        { corsRequestHeaders = ["Content-Type"],
+          corsMethods = "OPTIONS" : simpleMethods
+        }
+
 runServe :: Int -> (forall m x. LogT m x -> m x) -> IO ()
 runServe port runLogging = do
   runLogging $ logInfo_ $ "AOC server listening to port " <> T.show port
   let loggingServer = hoistServer aocApi (runError . runLogging) (handleHealth :<|> handleAocRequest)
-  let application = serve aocApi loggingServer
+  let application = corsAllowJson $ serve aocApi loggingServer
   liftIO $ runEnv port application
 
 type AppM = LogT (ExceptT String Handler)
@@ -159,12 +171,17 @@ handleHealth = localDomain "health" $ do
   logTrace_ "health ok"
   return "ok"
 
+throwServerError :: ServerError -> AppM a
+throwServerError = lift . lift . throwError
+
 handleAocRequest :: AocSolutionRequest -> AppM AocSolutionResponse
 handleAocRequest req@AocSolutionRequest {..} = localDomain "handleAocRequest" $ do
   let sol = partSolution (solution day) part
   logTrace "Solution requested for " req
   case sol of
-    Unsolved -> return $ AocSolutionResponse req Nothing
+    Unsolved -> do
+      let errMessage = "This day and part is still unsolved. Check again later."
+      throwServerError err404 {errBody = errMessage}
     Solved f -> do
       ans <- f input
       return $ AocSolutionResponse req (Just ans)

@@ -73,4 +73,7 @@ executable aoc
         log-base,
         mtl,
         bytestring,
-        aeson
+        aeson,
+        wai-cors,
+        wai,
+        transformers
