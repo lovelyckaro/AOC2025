@@ -8,16 +8,11 @@ import Data.Text qualified as T
 import SantaLib hiding (part1, part2)
 import SantaLib.Parsing
 
-pInp :: Parser [(Int, Int)]
-pInp = do
-  nums <- many $ (,) <$> lexeme decimal <*> lexemeLn decimal
-  eof
-  return nums
+pInp :: Parser Text
+pInp = symbol "beans"
 
 part1 :: (MonadIO m, MonadError String m) => PartSolution m
-part1 = Solved $ \inp -> do
-  nums <- parseErr pInp inp
-  return $ T.show (length nums)
+part1 = Solved $ parseErr pInp
 
 part2 :: PartSolution m
 part2 = Unsolved
