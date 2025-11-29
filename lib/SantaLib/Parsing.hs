@@ -14,6 +14,7 @@ module SantaLib.Parsing
     symbolSp,
     filterNums,
     parseIO,
+    parseErr,
     signed,
     spaceLn,
     indented,
@@ -24,6 +25,7 @@ module SantaLib.Parsing
 where
 
 import Control.Monad (void)
+import Control.Monad.Except
 import Data.Char (isNumber)
 import Data.Function (on)
 import Data.List (groupBy)
@@ -78,6 +80,11 @@ parseIO :: Parser a -> FilePath -> Text -> IO a
 parseIO parser path str = case parse parser path str of
   Left err -> putStrLn (errorBundlePretty err) >> exitFailure
   Right ok -> return ok
+
+parseErr :: (MonadError String m) => Parser a -> Text -> m a
+parseErr parser text = case parse parser "<input>" text of
+  Right a -> return a
+  Left err -> throwError (errorBundlePretty err)
 
 indented :: Pos -> Parser a -> Parser (Pos, a)
 indented ref p = do

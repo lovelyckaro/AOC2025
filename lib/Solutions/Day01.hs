@@ -16,9 +16,7 @@ pInp = do
 
 part1 :: (MonadIO m, MonadError String m) => PartSolution m
 part1 = Solved $ \inp -> do
-  let parsed = parse pInp "input" inp
-  let prettyError = left errorBundlePretty parsed
-  nums <- liftEither prettyError
+  nums <- parseErr pInp inp
   return $ T.show (length nums)
 
 part2 :: PartSolution m
