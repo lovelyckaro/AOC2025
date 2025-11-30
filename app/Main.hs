@@ -116,9 +116,9 @@ runCli :: (forall m x. LogT m x -> m x) -> Bool -> InputSource -> Day -> Part ->
 runCli runLogger submit inputSource day part = runLogger $ logError $ do
   logTrace_ "Fetching description and input"
   aocOptions <- liftIO getOpts
-  liftIO $ fetchDescription aocOptions day
-  actualInput <- liftIO $ fetchInput aocOptions day
-  exampleInput <- liftIO $ getExample day
+  fetchDescription aocOptions day
+  actualInput <- fetchInput aocOptions day
+  exampleInput <- getExample day
   let input = case inputSource of
         ExampleInput -> exampleInput
         AocUserInput -> actualInput
@@ -135,7 +135,7 @@ runCli runLogger submit inputSource day part = runLogger $ logError $ do
   logInfo "Answer" answer
   if submit
     then do
-      (response, result) <- liftIO $ submitAnswer aocOptions day part answer
+      (response, result) <- submitAnswer aocOptions day part answer
       logInfo "Submit result" (T.pack (showSubmitRes result) <> "\n" <> response)
       case result of
         SubCorrect _ -> liftIO exitSuccess
