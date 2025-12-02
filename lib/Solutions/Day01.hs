@@ -1,5 +1,7 @@
 module Solutions.Day01 where
 
+import Control.Arrow
+import Control.Monad
 import Control.Monad.Error.Class
 import Data.List (scanl')
 import Data.Text (Text)
