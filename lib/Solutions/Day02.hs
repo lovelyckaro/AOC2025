@@ -37,6 +37,14 @@ part1 = Solved $ \inp -> do
 groupsOf :: Int -> Integer -> S.Set T.Text
 groupsOf size = S.fromList . T.chunksOf size . T.show
 
+groupsOf' :: Int -> Integer -> S.Set Integer
+groupsOf' size n =
+  n
+    |> iterate (`div` (10 ^ size))
+    |> takeWhile (> 0)
+    |> map (`mod` (10 ^ size))
+    |> S.fromList
+
 invalid' :: Integer -> Bool
 invalid' n = any (\s -> S.size s == 1) groups
   where
