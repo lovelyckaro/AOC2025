@@ -12,7 +12,6 @@ pInp txt = [[readText digit | digit <- T.chunksOf 1 line] | line <- T.lines txt]
 maxJoltage :: Int -> [Int] -> Int
 maxJoltage digits (firstNum : battery) = helper digits (firstNum, battery) battery
   where
-    helper 0 _ _ = 0
     helper 1 (currMax, _) [] = currMax
     helper n (currMax, (next : currMaxtail)) [] = currMax * 10 ^ (n - 1) + helper (n - 1) (next, currMaxtail) currMaxtail
     helper n (currMax, currMaxtail) (nextCandidate : unchecked)
