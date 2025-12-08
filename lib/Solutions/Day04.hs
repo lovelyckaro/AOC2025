@@ -1,3 +1,5 @@
+{-# OPTIONS_GHC -Wno-x-partial -Wno-unrecognised-warning-flags #-}
+
 module Solutions.Day04 where
 
 import Control.Monad
