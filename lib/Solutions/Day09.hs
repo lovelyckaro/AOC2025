@@ -55,7 +55,6 @@ compress points = (compressed, decompressMap)
 greens :: CPoint -> [CPoint] -> Set CPoint
 greens seed corners = inside
   where
-    -- hard coded seed that works for my input
     perim = S.fromList [(x, y) | ((x1, y1), (x2, y2)) <- perimeter corners, x <- [min x1 x2 .. max x1 x2], y <- [min y1 y2 .. max y1 y2]]
     neighbors (x, y) = S.fromList [(x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)]
     fill seen queue
